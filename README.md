@@ -1,5 +1,13 @@
 Context and branching for chatbot conversations (with Hubot).
 
+___
+
+## Breaking Changes to Hubot Compatibility
+
+Note that this fork does not maintain backwards compatibility with Hubot. The Transcribe module uses new features of Nubot's  DB storage adapter to store large data sets via the brain that aren't kept in memory. As such, if transcribing is enabled, methods are called that don't exist in the Hubot brain and will throw exceptions.
+
+___
+
 [![npm version](https://img.shields.io/npm/v/hubot-playbook.svg?style=flat)](https://www.npmjs.com/package/hubot-playbook)
 [![Build Status](https://travis-ci.org/timkinnane/hubot-playbook.svg?branch=master)](https://travis-ci.org/timkinnane/hubot-playbook)
 [![Coverage Status](https://coveralls.io/repos/github/timkinnane/hubot-playbook/badge.svg?branch=master)](https://coveralls.io/github/timkinnane/hubot-playbook?branch=master)
