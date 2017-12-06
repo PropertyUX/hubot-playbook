@@ -8,6 +8,7 @@ _ = require 'lodash'
 pretend = require 'hubot-pretend'
 
 playbook = null
+catchAll = /.*/
 
 describe 'Playbook - singleton', ->
 
@@ -129,7 +130,7 @@ describe 'Playbook', ->
 
       beforeEach ->
         sinon.spy playbook, 'scene'
-        pretend.robot.hear /.*/, (@res) => null # hear all responses
+        pretend.robot.hear catchAll, (@res) => null # hear all responses
         opts = sendReplies: false, scope: 'room'
         @listen = sinon.spy playbook.Scene.prototype, 'listen'
         @scene = playbook.sceneListen 'hear', /test/, opts, (res) ->
@@ -209,8 +210,9 @@ describe 'Playbook', ->
     it 'stores it in the transcripts array', ->
       playbook.transcripts[0].should.eql @transcript
 
-  describe '.transcribe', ->
 
+  describe '.transcribe', ->
+    ###
     beforeEach ->
       sinon.spy playbook, 'transcript'
       pretend.user('tester').send 'test'
@@ -250,6 +252,7 @@ describe 'Playbook', ->
         instance: name: 'dialogue'
         strings: [ 'test' ]
       ]
+    ###
 
   describe '.improvise', ->
 
@@ -286,7 +289,7 @@ describe 'Playbook', ->
         pretend.messages.pop().should.eql [ 'hubot', 'hello TESTER' ]
 
     context 'extended using transcript reocrds', ->
-
+      ###
       it 'merge the recorded answers with attribute tags', -> co ->
         {dialogue} = yield playbook.sceneEnter pretend.response 'tester', 'test'
         transcript = playbook.transcribe dialogue, events: ['match']
@@ -296,7 +299,7 @@ describe 'Playbook', ->
           user: favColor: userColors.pop() if userColors.length
         # ...
         yield dialogue.addPath 'what is your favourite colour?', [
-          [ /.*/, 'nice! mine is ${ this.user.favColor } too!' ]
+          [ catchAll, 'nice! mine is ${ this.user.favColor } too!' ]
         ], 'fav-color'
         # ...
         yield pretend.user('tester').send 'orange'
@@ -305,6 +308,7 @@ describe 'Playbook', ->
           [ 'tester', 'orange' ],
           [ 'hubot', 'nice! mine is orange too!' ]
         ]
+      ###
 
   describe '.shutdown', ->
 

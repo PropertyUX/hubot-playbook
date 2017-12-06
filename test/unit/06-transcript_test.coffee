@@ -18,6 +18,9 @@ removeListeners = (robot) -> robot.events.removeAllListeners.apply robot
 
 clock = null
 
+# TODO: Refactor tests when pretend supports new brain storage adapter methods
+###
+
 describe 'Transcript', ->
 
   beforeEach ->
@@ -414,7 +417,6 @@ describe 'Transcript', ->
         @transcript.findKeyMatches('pick-a-color', '111', 0)
         .should.eql ['blue', 'orange']
 
-  ###
   describe '.findIdMatches', ->
 
     beforeEach ->
