@@ -1,25 +1,25 @@
 {
-  "name": "hubot-playbook",
+  "name": "nubot-playbook",
   "description": "Conversational UI chatbot framework.",
   "main": "./lib/index.js",
   "files": [
     "lib/"
   ],
-  "version": "1.0.0",
+  "version": "0.0.0",
   "engines": {
     "node": "> 8.0.0",
     "npm": "> 5.0.0"
   },
-  "author": "Tim Kinnane <timkinnane@gmail.com>",
+  "author": "PropertyUX",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/timkinnane/hubot-playbook.git"
+    "url": "https://github.com/PropertyUX/nubot-playbook.git"
   },
   "bugs": {
-    "url": "https://github.com/timkinnane/hubot-playbook/issues"
+    "url": "https://github.com/PropertyUX/nubot-playbook/issues"
   },
-  "homepage": "https://github.com/timkinnane/hubot-playbook#readme",
+  "homepage": "https://github.com/PropertyUX/nubot-playbook#readme",
   "nyc": {
     "reporter": [
       "lcovonly",
@@ -90,7 +90,7 @@
     "nyc": "^11.2.1",
     "onchange": "^3.2.1",
     "rimraf": "^2.6.1",
-    "semantic-release": "^8.0.3",
+    "semantic-release": "^8.2.0",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
     "snazzy": "^7.0.0",
