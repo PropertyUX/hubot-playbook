@@ -1,6 +1,6 @@
---compilers coffee:coffee-script/register
+--require coffee-script/register
 --require mocha-clean
 --recursive
 --sort
---use-strict
+--use_strict
 --reporter spec

@@ -1,0 +1,8 @@
+{
+  "mocha.files.glob": "test/unit/*.*",
+  "mocha.runTestsOnSave": "false",
+  "mocha.requires": [
+    "coffee-script/register"
+  ],
+  "mocha.options": {}
+}
