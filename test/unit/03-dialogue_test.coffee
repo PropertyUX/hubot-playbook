@@ -349,6 +349,15 @@ describe 'Dialogue', ->
         dialogue.addBranch /foo/, 'foo'
         dialogue.startTimeout.should.have.calledOnce
 
+    context 'without further input', ->
+
+      it 'calls onTimeout', ->
+        dialogue = new Dialogue testRes, timeout: 10
+        dialogue.onTimeout = sinon.spy()
+        dialogue.addBranch /foo/, 'foo'
+        clock.tick 20
+        dialogue.onTimeout.should.have.calledOnce
+
   describe '.receive', ->
 
     it 'stores the latest response object', -> co ->
@@ -477,6 +486,26 @@ describe 'Dialogue', ->
           dialogue.addBranch /2/, 'got 2'
         yield dialogue.receive pretend.response 'tester', 'more'
         dialogue.end.should.not.have.called
+
+      it 'restarts the timeout', -> co ->
+        dialogue = new Dialogue testRes, timeout: 10
+        dialogue.onTimeout = sinon.spy()
+        dialogue.addBranch /more/, ->
+          dialogue.addBranch /1/, 'got 1',
+          dialogue.addBranch /2/, 'got 2',
+        yield dialogue.receive pretend.response 'tester', 'more'
+        dialogue.clearTimeout.callCount.should.equal 2
+        dialogue.startTimeout.callCount.should.equal 3
+
+      it 'calls onTimeout without input', -> co ->
+        dialogue = new Dialogue testRes, timeout: 10
+        dialogue.onTimeout = sinon.spy()
+        dialogue.addBranch /more/, ->
+          dialogue.addBranch /1/, 'got 1',
+          dialogue.addBranch /2/, 'got 2',
+        yield dialogue.receive pretend.response 'tester', 'more'
+        clock.tick 20
+        dialogue.onTimeout.should.have.called
 
     context 'on matching branch that adds a new path', ->
 

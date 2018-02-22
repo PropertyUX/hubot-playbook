@@ -43,6 +43,6 @@ class AsyncConversation {
 module.exports = robot => {
   playbook.use(robot)
   playbook.sceneHear(/async/, {
-    timeout: 10
+    timeout: 30
   }, 'async-conversation', (res) => new AsyncConversation(res))
 }

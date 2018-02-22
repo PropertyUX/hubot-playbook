@@ -10,9 +10,9 @@ pretend = require 'hubot-pretend'
 Dialogue = require '../../lib/modules/dialogue'
 Scene = require '../../lib/modules/scene'
 
+# init globals
+clock = null
 setImmediatePromise = util.promisify setImmediate
-
-wait = (delay) -> new Promise (resolve, reject) -> setTimeout resolve, delay
 matchRes = null
 matchAny = /.*/
 
@@ -21,7 +21,7 @@ describe 'Scene', ->
   beforeEach ->
     pretend.start()
     pretend.log.level = 'silent'
-
+    clock = sinon.useFakeTimers()
     matchRes = sinon.match.instanceOf pretend.robot.Response
     .and sinon.match.has 'dialogue'
 
@@ -30,7 +30,7 @@ describe 'Scene', ->
 
   afterEach ->
     pretend.shutdown()
-
+    clock.restore()
     Object.getOwnPropertyNames(Scene.prototype).map (key) ->
       Scene.prototype[key].restore()
 
@@ -367,7 +367,7 @@ describe 'Scene', ->
             scene.exit.should.have.calledWith res, 'timeout'
             done()
           context.dialogue.addBranch matchAny, '' # start timeout, stop exit
-          wait 20
+          clock.tick 20
         return
 
       it 'calls .exit again on "incomplete"', (done) ->
@@ -381,7 +381,7 @@ describe 'Scene', ->
             scene.exit.should.have.calledWith res, 'incomplete'
             done()
           context.dialogue.addBranch matchAny, ''
-          wait 20
+          clock.tick 20
         return
 
     context 'dialogue completed (by message matching branch)', ->
@@ -443,7 +443,7 @@ describe 'Scene', ->
         timeout = sinon.spy()
         dialogue.onTimeout timeout
         scene.exit pretend.lastReceive(), 'testing exits'
-        yield wait 20
+        clock.tick 20
         timeout.should.not.have.called
 
       it 'removes the dialogue instance from engaged array', -> co ->
@@ -458,7 +458,7 @@ describe 'Scene', ->
         {dialogue} = yield scene.enter pretend.lastReceive(), timeout: 10
         dialogue.addBranch matchAny, '' # start timeout, stop exit
         scene.exit pretend.lastReceive(), 'testing exits'
-        yield wait 20
+        clock.tick 20
         scene.exit.returnValues.pop().should.be.true
 
       it 'logged the reason', -> co ->
@@ -467,7 +467,7 @@ describe 'Scene', ->
         {dialogue} = yield scene.enter pretend.lastReceive(), timeout: 10
         dialogue.addBranch matchAny, '' # start timeout, stop exit
         scene.exit pretend.lastReceive(), 'testing exits'
-        yield wait 20
+        clock.tick 20
         pretend.logs.pop().should.eql [
           'info', 'Disengaged user user_111 (testing exits) (id: scene_111)'
         ]
@@ -479,7 +479,7 @@ describe 'Scene', ->
         dialogue.receive = sinon.spy()
         scene.exit pretend.lastReceive(), 'tester'
         pretend.user('tester').send 'test'
-        yield wait 20
+        clock.tick 20
         dialogue.receive.should.not.have.called
 
     context 'with user in scene, called from events', ->
@@ -492,7 +492,7 @@ describe 'Scene', ->
             scene.exit.should.have.calledTwice
             done()
           context.dialogue.addBranch matchAny, '' # start timeout, stop exit
-          wait 20
+          clock.tick 20
         return
 
       it 'returns true the first time', (done) ->
@@ -503,7 +503,7 @@ describe 'Scene', ->
             scene.exit.getCall(0).should.have.returned true
             done()
           context.dialogue.addBranch matchAny, '' # start timeout, stop exit
-          wait 20
+          clock.tick 20
         return
 
       it 'returns false the second time (because already disengaged)', (done) ->
@@ -514,7 +514,7 @@ describe 'Scene', ->
             scene.exit.getCall(1).should.have.returned false
             done()
           context.dialogue.addBranch matchAny, '' # start timeout, stop exit
-          wait 20
+          clock.tick 20
         return
 
     context 'user not in scene, called manually', ->

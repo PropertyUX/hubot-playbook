@@ -4,6 +4,8 @@ const should = require('chai').should()
 const pretend = require('hubot-pretend')
 const wait = (delay) => new Promise((resolve, reject) => setTimeout(resolve, delay))
 
+// NB the async-callback script sets a default timeout of 30 ms
+
 describe('Async Callback', () => {
   beforeEach(() => {
     pretend.start().read('scripts/async-callback.js')
@@ -32,13 +34,13 @@ describe('Async Callback', () => {
       await pretend.user('tester').send('async')
       await pretend.user('tester').send('count 20')
       await pretend.user('tester').send('start')
-      await wait(30) // allow time to make sure no timeout messages
+      await wait(40) // allow time to make sure no timeout messages
     })
     it('ends dialogue and timeout countdown', async function () {
       await pretend.user('tester').send('async')
       await pretend.user('tester').send('count 20')
       await pretend.user('tester').send('start')
-      await wait(30) // wait for callback to complete
+      await wait(40) // wait for callback to complete
       let res = pretend.lastListen()
       res.dialogue.ended.should.equal(true)
       should.not.exist(res.dialogue.countdown)
