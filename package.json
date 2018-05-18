@@ -5,7 +5,7 @@
   "files": [
     "lib/"
   ],
-  "version": "1.2.2",
+  "version": "1.2.3",
   "engines": {
     "node": "> 8.0.0",
     "npm": "> 5.0.0"
